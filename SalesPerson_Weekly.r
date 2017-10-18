@@ -6,7 +6,7 @@ library(dplyr)
 library(ggplot2)
 library(reshape2)
 #filename <- paste('//gtc-docsrv01/GTC_Share/Data Analytics/Analysis/AccountsMonthly/SalesWeekly/data/', as.Date(Sys.time()), '.xlsx', sep = '')
-filename <- paste('//gtc-docsrv01/GTC_Share/Commercial/Sales report and target tracking/Sales Performance Report/Sales_WeeklyUpdate_V7', '.xlsm', sep = '')
+filename <- paste('//gtc-docsrv01/GTC_Share/Commercial/Sales report and target tracking/Sales Performance Report/Sales_WeeklyUpdate_V8', '.xlsm', sep = '')
 # load package for sql
 #library(DBI)
 library(RODBC)
@@ -16,22 +16,14 @@ odbcChannel <- odbcConnect('echo_core', uid='Daria Alekseeva', pwd='Welcome01')
 
 nonspenders <- sqlQuery( odbcChannel, 
                          "
- Declare @ReportDateStart date
+                         Declare @ReportDateStart date
                          Declare @ReportDateEnd date
                          Declare @1 date
-                         Declare @2 date
-                         Declare @3 date
-                         Declare @4 date
-                         Declare @5 date
-                         Declare @6 date
+ 
                          set @ReportDateEnd=getdate()--cast(dateadd(dy,1-datepart(dd,getdate()),getdate()) as date)
                          Set @ReportDateStart=dateadd(mm,-6,dateadd(dy,1-datepart(dd,getdate()),getdate()))
-                         
-                         --Set @ReportDateStart=--dateadd(month,-4,datepart(MM,getdate()))
                          Set @1=@ReportDateStart;
-                         Set @2 =DATEADD(month,1,@1) 
-                         Set @3 =DATEADD(month,1,@2) 
-                         Set @4 =DATEADD(month,1,@3) 
+
                          
                          Select
                          @ReportDateStart as 'ReportDateStart',
@@ -39,7 +31,7 @@ nonspenders <- sqlQuery( odbcChannel,
                          ca.dateOpened as 'OpeningDate', 
                          --	   ca.number,
                          --	   ca.name, 
-                         ca.id,
+                         ca.name 'AccountName',
                          isnull((select ca1.name from echo_core_prod..customer_accounts ca1 where ca.parent_id is not null and ca.parent_id=ca1.id), ca.name) as 'Parent/AccountName', 
                          isnull((select ca1.number from echo_core_prod..customer_accounts ca1 where ca.parent_id is not null and ca.parent_id=ca1.id), ca.number) as 'Parent/AccountNumber', 
                          --	   cg.name as 'Grade',
@@ -234,7 +226,7 @@ final<-nonspenders[c("ReportDateStart",
                      "SalesPerson",
                      "Parent/AccountName",
                      "Parent/AccountNumber",
-                     "phone",
+                     "AccountName",
                      "contact",
                      "TotalJobsReportPeriod",
                      "TotalSpendReportPeriod",
@@ -319,7 +311,7 @@ library(RDCOMClient)
 OutApp <- COMCreate("Outlook.Application")
 outMail = OutApp$CreateItem(0)
 outMail[["subject"]] = 'Weekly Sales Report'
-outMail[["To"]] = "haider.variava@greentomatocars.com;daria.alekseeva@greentomatocars.com;antony.carolan@greentomatocars.com;sean.sauter@greentomatocars.com"
+outMail[["To"]] = "daria.alekseeva@greentomatocars.com;sean.sauter@greentomatocars.com"
 #outMail[["To"]] = "antony.carolan@greentomatocars.com"
 outMail[["body"]] =string1 
 
