@@ -159,7 +159,7 @@ typeof(calls$Type)
 
 
 cc<-c("354","417","209")
-cc<-c("354","417","419","448","9012","386","209")
+cc<-c("354","417","419","448","9012","386","209", "385")
 calls <- calls[calls$Exno %in% cc,]
 
 calls <- calls[calls$Type == "O",]
@@ -223,18 +223,20 @@ SalesPeople<-c("Niche Sullivan",
                "Kennifer Patric",
                "Mark Taylor",
                "Pierre Netty",
-               "Ronak Nayee")
+               "Ronak Nayee",
+               "Joshua King")
 
 Niche<-final[final$SalesPerson == "Niche Sullivan",]
 Claire<-final[final$SalesPerson == "Claire Thackeray",]
 Mark<-final[final$SalesPerson == "Mark Taylor",]
 Ronak<-final[final$SalesPerson == "Ronak Nayee",]
+Joshua<-final[final$SalesPerson == "Joshua King",]
 
 
 #append calls
 CallsOld<-read.xlsx(filename, sheetName = "Calls",header = TRUE, rowIndex=NULL)
 CallsOld<-CallsOld[,2:6]
-WeeklyCalls<-rbind(CallsOld,WeeklyCalls)
+WeeklyCalls<-unique(rbind(CallsOld,WeeklyCalls))
 
 # fix variable type in weeklyCalls
 WeeklyCalls$Calls = as.numeric(WeeklyCalls$Calls)
